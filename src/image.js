@@ -41,6 +41,9 @@ async function loadImage(regl, p, res) {
 	try {
 		const data = await dataAccess.fetchImage(p, dynamicQual(res));
 		title = data.title;
+
+		console.log("titulo desde image.js:  "+ title);
+
 		// Resize image to a power of 2 to use mipmap (faster than createImageBitmap resizing)
 		image = await createImageBitmap(data.image);
 		ctx.drawImage(image, 0, 0, resizeCanvas.width, resizeCanvas.height);

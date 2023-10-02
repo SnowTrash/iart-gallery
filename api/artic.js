@@ -11,11 +11,14 @@ module.exports = {
     fetchList: async function (from, count) {
         const url = searchURL + query + fields + `&from=${from}&size=${count}`;
         const json = await fetch(url).then(res => res.json());
+        
         return json.data.filter((d) => d.image_id);
     },
     fetchImage: async function (obj, advicedResolution) {
         const url = imageURL(obj, resolutions[advicedResolution]);
         const blob = await fetch(url).then(res => res.blob());
+
+        
         return {
             title: obj.title + " - " + obj.artist_title,
             image: blob

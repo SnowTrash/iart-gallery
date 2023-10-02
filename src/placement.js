@@ -68,8 +68,11 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         mat4.fromTranslation(textmodel, [pos[0], 1.7 - globalScale, pos[2]]);
         mat4.scale(textmodel, textmodel, [2,2,2]);
         mat4.rotateY(textmodel, textmodel, -angle);
+        
+        console.log("valor de vseg: --->  "+ vseg);
+
         batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen:null });
-    };
+    };  
     // Fetch the first textures
     texture.fetch(regl, 20, dynamicRes, loadPainting, () => fetching = false);
     return {
@@ -83,8 +86,9 @@ module.exports = (regl, {placements, getAreaIndex}) => {
             // Load close textures
             shownBatch = batch.slice(Math.max(0, index - renderDist), index + renderDist);
             shownBatch.map(t => texture.load(regl, t, dynamicRes));
-            // Frustum / Orientation culling
+            // Frustum / Orientat ion culling
             shownBatch = shownBatch.filter(t => t.tex && culling(pos, angle, fovX, t));
+
             // Fetch new textures
             if (index <= batch.length - loadDist) return;
             if (!fetching) {
