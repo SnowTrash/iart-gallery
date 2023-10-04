@@ -1,6 +1,6 @@
 'strict mode';
 
-const api = require('../api/api');
+const api = require('../api_handler/api');
 const selectedApi = new URLSearchParams(window.location.search).get("api");
 const dataAccess = api[selectedApi] || api[api.default];
 const text = require('./text');
@@ -8,13 +8,16 @@ const text = require('./text');
 let paintingCache = {};
 let unusedTextures = [];
 
-const dynamicQualThreshold = 2;
-function dynamicQual(quality) {
-	if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
-		quality = (quality == 'high') ? 'mid' : 'low';
-	}
-	return quality;
-}
+
+// cargar dinamicamente la imagen segun la resolución
+
+// const dynamicQualThreshold = 2;
+// function dynamicQual(quality) {
+// 	if(!navigator.connection || navigator.connection.downlink < dynamicQualThreshold) {
+// 		quality = (quality == 'high') ? 'mid' : 'low';
+// 	}
+// 	return quality;
+// }
 
 const resizeCanvas = document.createElement('canvas');
 resizeCanvas.width = resizeCanvas.height = 2048;
@@ -29,7 +32,7 @@ const emptyImage = (regl) => [
 	1
 ];
 
-async function loadImage(regl, p, res) {
+async function loadImage(regl, p) {
 	if (aniso === false) {
 		aniso = regl.hasExtension('EXT_texture_filter_anisotropic') ? regl._gl.getParameter(
 			regl._gl.getExtension('EXT_texture_filter_anisotropic').MAX_TEXTURE_MAX_ANISOTROPY_EXT
@@ -39,10 +42,13 @@ async function loadImage(regl, p, res) {
 	
 	let image, title;
 	try {
-		const data = await dataAccess.fetchImage(p, dynamicQual(res));
+		// accesso a las imagenes de calidad dinamica
+		// const data = await dataAccess.fetchImage(p, dynamicQual(res));
+		
+		const data = await dataAccess.fetchImage(p);
 		title = data.title;
 
-		console.log("titulo desde image.js:  "+ title);
+		// console.log("titulo desde image.js:  "+ title);
 
 		// Resize image to a power of 2 to use mipmap (faster than createImageBitmap resizing)
 		image = await createImageBitmap(data.image);
@@ -50,7 +56,10 @@ async function loadImage(regl, p, res) {
 	} catch(e) {
 		// Try again with a lower resolution, otherwise return an empty image
 		console.error(e);
-		return res == "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
+		return emptyImage(regl);
+
+		//linea de acceso a calidad dinámica
+		// return res == "high" ? await loadImage(regl, p, "low") : emptyImage(regl);
 	}
 
 	return [(unusedTextures.pop() || regl.texture)({
@@ -77,7 +86,7 @@ module.exports = {
 					return;
 				}
 				paintingCache[p.image_id] = p;
-				loadImage(regl, p, res).then(([tex, textGen, aspect]) => {
+				loadImage(regl, p).then(([tex, textGen, aspect]) => {
 					cbOne({ ...p, tex, textGen, aspect });
 					if (--count === 0)
 						cbAll();
@@ -85,11 +94,11 @@ module.exports = {
 			})
 		});
 	},
-	load: (regl, p, res = "low") => {
+	load: (regl, p) => {
 		if (p.tex || p.loading)
 			return;
 		p.loading = true;
-		loadImage(regl, p, res).then(([tex, textGen]) => {
+		loadImage(regl, p).then(([tex, textGen]) => {
 			p.loading = false;
 			p.tex = tex;
 			p.text = textGen(p.width);

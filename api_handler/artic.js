@@ -18,7 +18,6 @@ module.exports = {
         const url = imageURL(obj, resolutions[advicedResolution]);
         const blob = await fetch(url).then(res => res.blob());
 
-        
         return {
             title: obj.title + " - " + obj.artist_title,
             image: blob
