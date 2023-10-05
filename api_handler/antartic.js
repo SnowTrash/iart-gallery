@@ -2,7 +2,7 @@
 
 // const customArtworks = require('./customArtworks.json');
 
-const APIurl = "http://localhost/api_galeria4.php?action=get_paintings";
+const APIurl = "http://localhost/api_galeria_csv.php";
 
 module.exports = {
     fetchList: async function () {        

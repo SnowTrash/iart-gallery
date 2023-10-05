@@ -44,9 +44,10 @@ module.exports = (regl) => {
 	attribute vec3 pos;
 	varying vec3 uv;
 	void main () {
+		float yOffset = 1.3;
 		uv = pos;
 		vec4 mpos = model * vec4(pos, 1);
-		mpos.y *= yScale;
+		mpos.y = (mpos.y + yOffset) * yScale;
 		gl_Position = proj * view * mpos;
 	}`,
 

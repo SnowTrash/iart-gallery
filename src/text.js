@@ -1,10 +1,15 @@
 'strict mode';
 
-const textHeight = 32;
+const textHeight = 98;
 const textCanvas = document.createElement('canvas');
-//document.body.appendChild(textCanvas);
-//textCanvas.style.position = "fixed";
-const maxWidth = textCanvas.width = textCanvas.height = 1024;
+
+// const infoCanvas = document.createElement('info-canvas');
+// document.body.appendChild(infoCanvas);
+
+// document.body.appendChild(textCanvas);
+// textCanvas.style.position = "fixed";
+
+const maxWidth = textCanvas.width = textCanvas.height = 2048;
 const ctx = textCanvas.getContext('2d');
 ctx.mozImageSmoothingEnabled = false;
 ctx.webkitImageSmoothingEnabled = false;

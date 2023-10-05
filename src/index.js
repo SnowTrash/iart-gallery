@@ -21,6 +21,8 @@ if(showStats) {
 	document.body.appendChild( stats.dom );
 }
 
+
+
 let regl, map, drawMap, placement, drawPainting, fps;
 
 regl = require('regl')({
@@ -33,7 +35,7 @@ regl = require('regl')({
 		//'oes_texture_float',
 		'EXT_texture_filter_anisotropic'
 	],
-	attributes: { alpha : false }
+	attributes: { alpha : false },
 });
 
 map = require('./map')();

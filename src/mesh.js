@@ -14,7 +14,7 @@ module.exports = (regl, data, useReflexion) => {
     const wallTexture = regl.texture();
     const floorTexture = regl.texture();
     loadTexture(wallTexture, "res/wall.jpg");
-    loadTexture(floorTexture, "res/floor.jpg");
+    loadTexture(floorTexture, "res/iloveimg-resized/Maroon-Marble-Floor.jpg");
     return regl({
         frag: `
         precision lowp float;
