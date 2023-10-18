@@ -69,7 +69,7 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         mat4.scale(textmodel, textmodel, [2,2,2]);
         mat4.rotateY(textmodel, textmodel, -angle);
         
-        console.log("valor de vseg: --->  "+ vseg);
+        // console.log("valor de vseg: --->  "+ vseg);
 
         batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen:null });
     };  

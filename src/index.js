@@ -21,8 +21,6 @@ if(showStats) {
 	document.body.appendChild( stats.dom );
 }
 
-
-
 let regl, map, drawMap, placement, drawPainting, fps;
 
 regl = require('regl')({

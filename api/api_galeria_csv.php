@@ -1,6 +1,8 @@
 <?php
+// Record the start time
+$startTime = microtime(true);
 
-header('Access-Control-Allow-Origin: http://192.168.0.229:9966');
+header('Access-Control-Allow-Origin: http://192.168.0.134:9966');
 
 // Define the path to your CSV file
 $csvFilePath = 'data/registro.csv'; // Update with the correct file name
@@ -68,14 +70,39 @@ while (($row = fgetcsv($csvFile)) !== false) {
         }
     }
 
-    // Add the row's paintings array to the main paintings array
+    // Add the row's paintings array to the main paintings array after reversing it
     $paintings = array_merge($paintings, $rowPaintings);
 }
+
+// Get the last painting
+$lastPainting = end($paintings);
+
+// Add 15 copies of the last painting with different image_id values
+for ($i = 12; $i >= 1; $i--) {
+    $copiedPainting = $lastPainting;
+    $copiedPainting["image_id"] = $lastPainting["image_id"] . "_copy" . $i;
+    $copies[] = $copiedPainting;
+}
+
+// Merge the copies with the original paintings
+$paintings = array_merge($copies, $paintings);
 
 // Close the CSV file
 fclose($csvFile);
 
+// Record the end time
+$endTime = microtime(true);
+
+// Calculate the execution time
+$executionTime = ($endTime - $startTime) * 1000; // in milliseconds
+
+// Add the execution time to the JSON data
+$dataWithExecutionTime = [
+    "data" => $paintings,
+    "execution_time_ms" => $executionTime
+];
+
 // Output the paintings in JSON format
-echo json_encode(["data" => $paintings]);
+echo json_encode($dataWithExecutionTime);
 
 ?>

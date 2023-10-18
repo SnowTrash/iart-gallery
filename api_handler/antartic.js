@@ -2,13 +2,26 @@
 
 // const customArtworks = require('./customArtworks.json');
 
+// const APIurl = "http://localhost/api_galeria4.php?action=get_paintings";
+
 const APIurl = "http://localhost/api_galeria_csv.php";
 
 module.exports = {
-    fetchList: async function () {        
+    fetchList: async function () {
+        const startTime = performance.now(); // Record the start time in JavaScript
+
         const json = await fetch(APIurl).then(res => res.json());
+
+        // Display the PHP execution time
+        console.log("PHP Execution Time: " + json.execution_time_ms + " ms");
+
+        var temp = json.data.filter((d) => d.image_id);
         
-        return json.data.filter((d) => d.image_id);
+        const endTime = performance.now(); // Record the end time in JavaScript
+        const jsExecutionTime = endTime - startTime; // Calculate the JavaScript execution time
+        console.log("JavaScript Execution Time: " + jsExecutionTime + " ms");
+
+        return temp;
         // Fetch the list of artworks from your custom database
     },
     fetchImage: async function (obj) {

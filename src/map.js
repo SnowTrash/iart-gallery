@@ -1,6 +1,6 @@
 'use strict';
 
-const mapSize = 4; // Log2 of the grid size (keep the value between [1, 6])
+const mapSize = 2; // Log2 of the grid size (keep the value between [1, 6])
 const cellSize = 9; // Size of the rooms
 const mapHeight = 16; // Height of the walls
 const wallThickness = 0.25; // Wall thickness
