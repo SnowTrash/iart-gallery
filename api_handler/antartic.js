@@ -2,8 +2,6 @@
 
 // const customArtworks = require('./customArtworks.json');
 
-// const APIurl = "http://localhost/api_galeria4.php?action=get_paintings";
-
 const APIurl = "http://localhost/api_galeria_csv.php";
 
 module.exports = {
@@ -30,6 +28,10 @@ module.exports = {
          
         // Extract the file extension from the image path
         const fileExtension = obj.image.substring(obj.image.lastIndexOf('.') + 1);
+                
+        // Assuming you have received the base64ImageData from the API response
+        // const contentType = 'image/jpeg'; // Specify the correct content type
+
           // Set the content type based on the file extension
         let contentType;
         if (fileExtension.toLowerCase() === 'jpg' || fileExtension.toLowerCase() === 'jpeg') {
@@ -40,9 +42,7 @@ module.exports = {
             // Handle other image formats if needed
             contentType = 'image/jpeg'; // Default to JPEG
         }
-        
-        // Assuming you have received the base64ImageData from the API response
-        // const contentType = 'image/jpeg'; // Specify the correct content type
+
 
         const byteCharacters = atob(obj.image);
         const byteArrays = [];

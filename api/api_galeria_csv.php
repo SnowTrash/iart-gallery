@@ -2,8 +2,6 @@
 // Record the start time
 $startTime = microtime(true);
 
-header('Access-Control-Allow-Origin: http://192.168.0.134:9966');
-
 // Define the path to your CSV file
 $csvFilePath = 'data/registro.csv'; // Update with the correct file name
 

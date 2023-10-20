@@ -68,37 +68,40 @@ module.exports = (regl, {placements, getAreaIndex}) => {
         mat4.fromTranslation(textmodel, [pos[0], 1.7 - globalScale, pos[2]]);
         mat4.scale(textmodel, textmodel, [2,2,2]);
         mat4.rotateY(textmodel, textmodel, -angle);
-        
-        // console.log("valor de vseg: --->  "+ vseg);
 
         batch.push({ ...p, vseg, angle, model, textmodel, text, width, textGen:null });
     };  
     // Fetch the first textures
-    texture.fetch(regl, 20, dynamicRes, loadPainting, () => fetching = false);
+    texture.fetch(regl, 60, dynamicRes, loadPainting, () => fetching = false);
     return {
         update: (pos, angle, fovX) => {
+            
             // Estimate player position index
             let index = getAreaIndex(pos[0], pos[2], 4);
             if (index === -1) return; // Out of bound => do nothing
+
             // Unload far textures
             batch.slice(0, Math.max(0, index - unloadDist)).map(t => texture.unload(t));
             batch.slice(index + unloadDist).map(t => texture.unload(t));
+
             // Load close textures
             shownBatch = batch.slice(Math.max(0, index - renderDist), index + renderDist);
             shownBatch.map(t => texture.load(regl, t, dynamicRes));
+
             // Frustum / Orientat ion culling
             shownBatch = shownBatch.filter(t => t.tex && culling(pos, angle, fovX, t));
 
             // Fetch new textures
-            if (index <= batch.length - loadDist) return;
-            if (!fetching) {
-                texture.fetch(regl, 10, dynamicRes, loadPainting, () => fetching = false);
-                fetching = true;
-            }
+            // if (index <= batch.length - loadDist) return;
+            // if (!fetching) {
+            //     texture.fetch(regl, 5, dynamicRes, loadPainting, () => fetching = false);
+            //     fetching = true;
+            // }
+
             // Update dynamic resolution
-            dynamicRes = "low";
-            if (dynamicResTimer) clearTimeout(dynamicResTimer);
-            dynamicResTimer = setTimeout(() => dynamicRes = "high", dynamicResPeriod);
+            // dynamicRes = "low";
+            // if (dynamicResTimer) clearTimeout(dynamicResTimer);
+            // dynamicResTimer = setTimeout(() => dynamicRes = "high", dynamicResPeriod);
         },
         batch: () => shownBatch
     };

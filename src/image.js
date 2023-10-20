@@ -74,6 +74,8 @@ async function loadImage(regl, p) {
 	];
 }
 
+let loadedTextures = [];
+
 module.exports = {
 	fetch: (regl, count = 10, res = "low", cbOne, cbAll) => {
 		const from = Object.keys(paintingCache).length;
@@ -104,14 +106,16 @@ module.exports = {
 			p.text = textGen(p.width);
 		});
 	},
-	unload: (p) => {
-		if (p.tex) {
-			unusedTextures.push(p.tex);
-			p.tex = undefined;
-		}
-		if (p.text) {
-			unusedTextures.push(p.text);
-			p.text = undefined;
-		}
-	}
+    unload: (p) => {
+        if (p.tex && loadedTextures.includes(p.tex)) {
+            p.tex.destroy();
+            p.tex = undefined;
+            loadedTextures = loadedTextures.filter(tex => tex !== p.tex);
+        }
+        if (p.text && loadedTextures.includes(p.text)) {
+            p.text.destroy();
+            p.text = undefined;
+            loadedTextures = loadedTextures.filter(tex => tex !== p.text);
+        }
+    }
 };
